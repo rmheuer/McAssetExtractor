@@ -153,6 +153,7 @@ public final class McAssetExtractor {
     }
 
     private int extractMetaAssets(JsonObject assetIndex, File outputDir) {
+        System.out.println("Downloading assets from launcher meta");
         int count = 0;
 
         JsonObject objects = assetIndex.getAsJsonObject("objects");
