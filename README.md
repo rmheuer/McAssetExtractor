@@ -8,7 +8,7 @@ to build. The output JAR will be found in the `target/` directory.
 #### Running
 
 McAssetExtractor requires Java 1.8 or higher. Use
-`java -jar McAssetExtractor-1.0.jar <version> <destination>` to extract
+`java -jar McAssetExtractor-1.0-jar-with-dependencies.jar <version> <destination>` to extract
 assets, replacing `<version>` with your desired version, and
 `<destination>` with a path to the destination directory.
 You can use the latest release or snapshot by setting the version to
