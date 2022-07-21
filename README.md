@@ -1,5 +1,13 @@
 # McAssetExtractor
- 
+
+#### About
+McAssetExtractor is a tool to extract assets from Minecraft by
+downloading from Mojang's API. It uses [GSON](https://github.com/google/gson)
+to parse the API's JSON responses.
+
+The [wiki.vg](https://wiki.vg) page on [Game files](https://wiki.vg/Game_files)
+is a helpful resource to understand how this works.
+
 #### Building
 
 Make sure you have Apache Maven installed, then run `mvn package`
