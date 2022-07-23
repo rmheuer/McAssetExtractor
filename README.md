@@ -8,6 +8,11 @@ to parse the API's JSON responses.
 The [wiki.vg](https://wiki.vg) page on [Game files](https://wiki.vg/Game_files)
 is a helpful resource to understand how this works.
 
+The primary goal of McAssetExtractor is to provide a convenient way
+to obtain Minecraft's assets, while avoiding copyright issues. By
+providing a tool to download assets from Mojang, we avoid any
+potential copyright issues from distributing Minecraft's assets.
+
 #### Building
 
 Make sure you have Apache Maven installed, then run `mvn package`
