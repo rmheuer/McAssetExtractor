@@ -121,7 +121,7 @@ public final class McAssetExtractor {
         return " (" + e.getClass().getSimpleName() + ": " + e.getMessage() + ")";
     }
 
-    private int extractJarAssets(byte[] clientData, File outputDir) {
+    private int[] extractJarAssets(byte[] clientData, File outputDir) {
         System.out.println("Extracting assets from client JAR");
 
         ZipInputStream zip = new ZipInputStream(new ByteArrayInputStream(clientData));
@@ -162,7 +162,7 @@ public final class McAssetExtractor {
         return new int[] {count, fail};
     }
 
-    private int extractMetaAssets(JsonObject assetIndex, File outputDir) {
+    private int[] extractMetaAssets(JsonObject assetIndex, File outputDir) {
         System.out.println("Downloading assets from launcher meta");
         int count = 0;
         int fail = 0;
