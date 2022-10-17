@@ -32,12 +32,12 @@ public final class McAssetExtractor {
         }
 
         byte[] clientJar = downloadClientJar(versionInfo);
-        int jarCount = extractJarAssets(clientJar, outDir);
+        int[] jarResult = extractJarAssets(clientJar, outDir);
 
         JsonObject assetIndex = getAssetIndex(versionInfo);
-        int metaCount = extractMetaAssets(assetIndex, outDir);
+        int[] metaResult = extractMetaAssets(assetIndex, outDir);
 
-        printSummary(jarCount, metaCount);
+        printSummary(jarResult, metaResult);
     }
 
     private String findVersionInfoUrl(String version) {
@@ -117,12 +117,17 @@ public final class McAssetExtractor {
         return destFile;
     }
 
+    private String formatException(Exception e) {
+        return " (" + e.getClass().getSimpleName() + ": " + e.getMessage() + ")";
+    }
+
     private int extractJarAssets(byte[] clientData, File outputDir) {
         System.out.println("Extracting assets from client JAR");
 
         ZipInputStream zip = new ZipInputStream(new ByteArrayInputStream(clientData));
         ZipEntry entry;
         int count = 0;
+        int fail = 0;
         try {
             while ((entry = zip.getNextEntry()) != null) {
                 if (!entry.getName().startsWith("assets"))
@@ -137,9 +142,14 @@ public final class McAssetExtractor {
                     if (!parent.isDirectory() && !parent.mkdirs())
                         throw new IOException("Failed to create directory " + parent);
 
-                    System.out.println("Extracting from JAR: " + entry.getName());
-                    copyStreams(zip, new FileOutputStream(file), false);
-                    count++;
+                    try {
+                        System.out.println("Extracting from JAR: " + entry.getName());
+                        copyStreams(zip, new FileOutputStream(file), false);
+                        count++;
+                    } catch (IOException e) {
+                        System.err.println("Failed to extract " + entry.getName() + formatException(e));
+                        fail++;
+                    }
                 }
             }
             zip.closeEntry();
@@ -149,12 +159,13 @@ public final class McAssetExtractor {
             exitError("Failed to unzip client JAR");
         }
 
-        return count;
+        return new int[] {count, fail};
     }
 
     private int extractMetaAssets(JsonObject assetIndex, File outputDir) {
         System.out.println("Downloading assets from launcher meta");
         int count = 0;
+        int fail = 0;
 
         JsonObject objects = assetIndex.getAsJsonObject("objects");
         File assetsDir = new File(outputDir, "assets");
@@ -175,22 +186,22 @@ public final class McAssetExtractor {
             String url = DOWNLOAD_URL_PREFIX + block + "/" + hash;
             try {
                 copyStreams(getDownloadStream(url), new FileOutputStream(targetFile), true);
+                count++;
             } catch (IOException e) {
                 e.printStackTrace();
-                System.err.println("Failed to download " + key + " from " + url);
+                System.err.println("Failed to download " + key + " from " + url + formatException(e));
+                fail++;
             }
-
-            count++;
         }
 
-        return count;
+        return new int[] {count, fail};
     }
 
-    private void printSummary(int jarCount, int metaAssets) {
+    private void printSummary(int[] jar, int[] meta) {
         System.out.println();
         System.out.println("Summary:");
-        System.out.println("Extracted " + jarCount + " assets from JAR");
-        System.out.println("Extracted " + metaAssets + " assets from launcher meta");
+        System.out.println("Extracted " + jar[0] + " assets from JAR (" + jar[1] + " failed)");
+        System.out.println("Extracted " + meta[0] + " assets from launcher meta (" + jar[1] + " failed)");
     }
 
     private JsonElement downloadJson(String url) throws IOException {
