@@ -19,7 +19,7 @@ import java.util.zip.ZipInputStream;
 
 public final class McAssetExtractor {
     private static final String VERSION_MANIFEST_URL = "https://launchermeta.mojang.com/mc/game/version_manifest.json";
-    private static final String DOWNLOAD_URL_PREFIX = "http://resources.download.minecraft.net/";
+    private static final String DOWNLOAD_URL_PREFIX = "https://resources.download.minecraft.net/";
 
     private void run(String version, File outDir) {
         String versionInfoUrl = findVersionInfoUrl(version);
