@@ -130,7 +130,7 @@ public final class McAssetExtractor {
         int fail = 0;
         try {
             while ((entry = zip.getNextEntry()) != null) {
-                if (!entry.getName().startsWith("assets"))
+                if (entry.getName().endsWith(".class"))
                     continue;
 
                 File file = checkAndCreateFile(outputDir, entry);
