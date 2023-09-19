@@ -130,7 +130,7 @@ public final class McAssetExtractor {
         int fail = 0;
         try {
             while ((entry = zip.getNextEntry()) != null) {
-                if (entry.getName().endsWith(".class"))
+                if (entry.getName().endsWith(".class") || entry.getName().startsWith("META-INF"))
                     continue;
 
                 File file = checkAndCreateFile(outputDir, entry);
